@@ -20,11 +20,7 @@
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-  html, body {
-    margin: 0;
-    height: 100%;
-    overflow: hidden;
-  }
+  html, body { margin: 0; height: 100%; overflow: hidden; }
 
   body {
     background: var(--paper);
@@ -39,25 +35,46 @@
 
   header {
     flex: 0 0 auto;
-    padding: 14px 18px 10px;
+    padding: 12px 18px 10px;
     border-bottom: 1px solid var(--line);
     display: flex;
-    align-items: baseline;
-    gap: 12px;
+    align-items: center;
+    gap: 10px;
   }
 
-  h1 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-  }
+  h1 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
 
   #meta {
     margin-left: auto;
     font-size: 13px;
     color: var(--ink-soft);
     font-variant-numeric: tabular-nums;
+  }
+
+  #langbar {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 6px;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .lang {
+    flex: 1 1 0;
+    min-height: 40px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink-soft);
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .lang[aria-pressed="true"] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
   }
 
   #status {
@@ -73,26 +90,13 @@
     min-height: 36px;
   }
 
-  #dot {
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    background: var(--ink-soft);
-    flex: 0 0 auto;
-  }
+  #dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ink-soft); flex: 0 0 auto; }
 
-  body.recording #dot {
-    background: var(--rec);
-    animation: pulse 1.2s ease-in-out infinite;
-  }
+  body.recording #dot { background: var(--rec); animation: pulse 1.2s ease-in-out infinite; }
 
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.25; }
-  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
 
-  @media (prefers-reduced-motion: reduce) {
-    body.recording #dot { animation: none; }
-  }
+  @media (prefers-reduced-motion: reduce) { body.recording #dot { animation: none; } }
 
   #sheet {
     flex: 1 1 auto;
@@ -106,16 +110,12 @@
     word-break: break-word;
     outline: none;
     min-height: 100%;
-    font-size: var(--size, 18px);
+    font-size: 18px;
   }
 
   #interim { color: var(--ink-soft); }
 
-  #empty {
-    color: var(--ink-soft);
-    font-size: 15px;
-    line-height: 1.8;
-  }
+  #empty { color: var(--ink-soft); font-size: 15px; line-height: 1.8; }
 
   footer {
     flex: 0 0 auto;
@@ -124,16 +124,11 @@
     padding: 12px 14px calc(12px + var(--pad-bottom));
   }
 
-  #tools {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
+  #tools { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
 
   .tool {
-    flex: 1 1 28%;
-    min-height: 46px;
+    flex: 1 1 30%;
+    min-height: 44px;
     border: 1px solid var(--line);
     background: #fff;
     color: var(--ink);
@@ -144,11 +139,10 @@
   }
 
   .tool:active { background: #E3E8ED; }
-  .tool:disabled { opacity: 0.4; }
 
   #mic {
     width: 100%;
-    min-height: 64px;
+    min-height: 62px;
     border: none;
     border-radius: 14px;
     background: var(--teal);
@@ -163,26 +157,22 @@
 
   body.recording #mic { background: var(--rec); }
 
-  #mic:disabled {
-    background: var(--ink-soft);
-    opacity: 0.6;
-  }
+  #mic:disabled { background: var(--ink-soft); opacity: 0.6; }
 
-  button:focus-visible {
-    outline: 3px solid var(--teal);
-    outline-offset: 2px;
-  }
+  button:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
 
   #toast {
     position: fixed;
     left: 50%;
-    bottom: calc(150px + var(--pad-bottom));
+    bottom: calc(160px + var(--pad-bottom));
     transform: translateX(-50%);
     background: var(--ink);
     color: #fff;
     padding: 10px 18px;
     border-radius: 999px;
     font-size: 14px;
+    max-width: 80%;
+    text-align: center;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s;
@@ -197,6 +187,11 @@
   <h1>음성 받아쓰기</h1>
   <span id="meta">0자</span>
 </header>
+
+<div id="langbar">
+  <button class="lang" id="langKo" aria-pressed="true">한국어</button>
+  <button class="lang" id="langEn" aria-pressed="false">English</button>
+</div>
 
 <div id="status"><span id="dot"></span><span id="statusText">마이크 버튼을 눌러 시작하세요</span></div>
 
@@ -216,6 +211,7 @@
     <button class="tool" id="btnCopy">복사</button>
     <button class="tool" id="btnSave">저장</button>
     <button class="tool" id="btnShare">공유</button>
+    <button class="tool" id="btnDict">단어 교정</button>
     <button class="tool" id="btnClear">비우기</button>
   </div>
   <button id="mic">녹음 시작</button>
@@ -233,6 +229,8 @@
   var statusText = document.getElementById('statusText');
   var metaEl = document.getElementById('meta');
   var toastEl = document.getElementById('toast');
+  var langKoBtn = document.getElementById('langKo');
+  var langEnBtn = document.getElementById('langEn');
 
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   var recognition = null;
@@ -240,11 +238,69 @@
   var wakeLock = null;
   var startedAt = 0;
   var timerId = null;
+  var lang = 'ko-KR';
+
+  var KEY_TEXT = 'voice-notes-draft';
+  var KEY_LANG = 'voice-notes-lang';
+  var KEY_DICT = 'voice-notes-dict';
+
+  var baseDict = {
+    'ko-KR': {
+      '빙정 핵': '빙정핵',
+      '인공 강우': '인공강우',
+      '인공 강수': '인공강수',
+      '구름 물리': '구름물리',
+      '시딩': '씨딩',
+      '기상 청': '기상청',
+      '국립 기상 과학원': '국립기상과학원',
+      '라디오 존데': '라디오존데',
+      '이중 편파': '이중편파',
+      '적설 하중': '적설하중',
+      '수치 예보': '수치예보',
+      '다운 스케일링': '다운스케일링'
+    },
+    'en-US': {
+      'ice nuclear': 'ice nucleating',
+      'i n p': 'INP',
+      'w r f': 'WRF',
+      'c c n': 'CCN',
+      'cloud seating': 'cloud seeding',
+      'super cooled': 'supercooled'
+    }
+  };
+
+  var userDict = {};
+
+  function loadDict() {
+    try {
+      var raw = localStorage.getItem(KEY_DICT);
+      if (raw) userDict = JSON.parse(raw);
+    } catch (err) { userDict = {}; }
+  }
+
+  function saveDict() {
+    try { localStorage.setItem(KEY_DICT, JSON.stringify(userDict)); } catch (err) {}
+  }
+
+  function escapeRe(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function correct(s) {
+    var table = {};
+    var k;
+    for (k in baseDict[lang]) table[k] = baseDict[lang][k];
+    for (k in userDict) table[k] = userDict[k];
+    for (k in table) {
+      s = s.replace(new RegExp(escapeRe(k), 'gi'), table[k]);
+    }
+    return s;
+  }
 
   function toast(msg) {
     toastEl.textContent = msg;
     toastEl.classList.add('show');
-    setTimeout(function () { toastEl.classList.remove('show'); }, 1600);
+    setTimeout(function () { toastEl.classList.remove('show'); }, 1800);
   }
 
   function refreshMeta() {
@@ -252,50 +308,54 @@
     var suffix = '';
     if (wantRecording && startedAt) {
       var s = Math.floor((Date.now() - startedAt) / 1000);
-      var m = Math.floor(s / 60);
-      suffix = ' · ' + m + ':' + String(s % 60).padStart(2, '0');
+      suffix = ' · ' + Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
     }
     metaEl.textContent = n + '자' + suffix;
     emptyEl.style.display = textEl.innerText.trim() ? 'none' : 'block';
   }
 
-  function scrollToEnd() {
-    sheetEl.scrollTop = sheetEl.scrollHeight;
-  }
+  function scrollToEnd() { sheetEl.scrollTop = sheetEl.scrollHeight; }
 
   if (!SR) {
     statusText.textContent = '이 브라우저는 음성 인식을 지원하지 않습니다';
     micBtn.disabled = true;
     emptyEl.innerHTML = '안드로이드는 <b>Chrome</b>, 아이폰은 <b>Safari</b>에서 열어주세요.<br>' +
-      '카카오톡·네이버 앱 안의 브라우저에서는 동작하지 않습니다. ' +
-      '링크를 길게 눌러 기본 브라우저로 열면 됩니다.';
+      '카카오톡·메신저 안의 브라우저에서는 마이크를 쓸 수 없습니다.';
     refreshMeta();
     return;
   }
 
   function appendFinal(s) {
-    s = s.trim();
+    s = correct(s.trim());
     if (!s) return;
     var cur = textEl.innerText;
     var needSpace = cur.length > 0 && !/[\s\n]$/.test(cur);
     textEl.innerText = cur + (needSpace ? ' ' : '') + s;
     refreshMeta();
     scrollToEnd();
+    keep();
+  }
+
+  function bestOf(result) {
+    var best = result[0];
+    for (var i = 1; i < result.length; i++) {
+      if ((result[i].confidence || 0) > (best.confidence || 0)) best = result[i];
+    }
+    return best.transcript;
   }
 
   function buildRecognition() {
     var r = new SR();
-    r.lang = 'ko-KR';
+    r.lang = lang;
     r.continuous = true;
     r.interimResults = true;
-    r.maxAlternatives = 1;
+    r.maxAlternatives = 3;
 
     r.onresult = function (e) {
       var interim = '';
       for (var i = e.resultIndex; i < e.results.length; i++) {
-        var t = e.results[i][0].transcript;
-        if (e.results[i].isFinal) appendFinal(t);
-        else interim += t;
+        if (e.results[i].isFinal) appendFinal(bestOf(e.results[i]));
+        else interim += e.results[i][0].transcript;
       }
       interimEl.textContent = interim ? ' ' + interim : '';
       if (interim) scrollToEnd();
@@ -319,7 +379,7 @@
       if (wantRecording) {
         setTimeout(function () {
           if (!wantRecording) return;
-          try { r.start(); } catch (err) { /* 이미 시작된 경우 무시 */ }
+          try { r.start(); } catch (err) {}
         }, 250);
       } else {
         applyState();
@@ -333,7 +393,9 @@
     document.body.classList.toggle('recording', wantRecording);
     micBtn.textContent = wantRecording ? '녹음 정지' : '녹음 시작';
     if (wantRecording) {
-      statusText.textContent = '듣는 중 — 편하게 말씀하세요';
+      statusText.textContent = lang === 'ko-KR'
+        ? '한국어를 듣는 중 — 편하게 말씀하세요'
+        : 'Listening in English — speak naturally';
     } else if (!/권한|네트워크|오류/.test(statusText.textContent)) {
       statusText.textContent = '정지됨';
     }
@@ -342,7 +404,7 @@
   async function lockScreen() {
     try {
       if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen');
-    } catch (err) { /* 지원하지 않으면 무시 */ }
+    } catch (err) {}
   }
 
   function unlockScreen() {
@@ -367,20 +429,46 @@
     unlockScreen();
     applyState();
     refreshMeta();
+    keep();
   }
+
+  function setLang(next) {
+    if (lang === next) return;
+    lang = next;
+    langKoBtn.setAttribute('aria-pressed', String(lang === 'ko-KR'));
+    langEnBtn.setAttribute('aria-pressed', String(lang === 'en-US'));
+    try { localStorage.setItem(KEY_LANG, lang); } catch (err) {}
+    if (wantRecording) {
+      wantRecording = false;
+      if (recognition) { try { recognition.abort(); } catch (err) {} }
+      setTimeout(function () {
+        wantRecording = true;
+        recognition = buildRecognition();
+        try { recognition.start(); } catch (err) {}
+        applyState();
+      }, 300);
+    } else {
+      toast(lang === 'ko-KR' ? '한국어로 인식합니다' : 'Recognizing English');
+    }
+  }
+
+  langKoBtn.addEventListener('click', function () { setLang('ko-KR'); });
+  langEnBtn.addEventListener('click', function () { setLang('en-US'); });
 
   micBtn.addEventListener('click', function () {
     if (wantRecording) stop(); else start();
   });
 
   document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'visible' && wantRecording && !wakeLock) lockScreen();
+    if (document.visibilityState === 'hidden') keep();
+    else if (wantRecording && !wakeLock) lockScreen();
   });
 
   document.getElementById('btnBreak').addEventListener('click', function () {
     textEl.innerText = textEl.innerText.replace(/\s+$/, '') + '\n\n';
     refreshMeta();
     scrollToEnd();
+    keep();
   });
 
   document.getElementById('btnCopy').addEventListener('click', async function () {
@@ -431,15 +519,54 @@
     }
   });
 
-  var KEY = 'voice-notes-draft';
+  document.getElementById('btnDict').addEventListener('click', function () {
+    var n = Object.keys(userDict).length;
+    var input = prompt(
+      '자주 틀리는 말을 등록하세요. 잘못 들린 말과 고칠 말을 쉼표로 구분합니다.\n' +
+      '예) 빙전 핵, 빙정핵\n\n' +
+      '등록된 단어 ' + n + '개. 모두 지우려면 "초기화"라고 입력하세요.', '');
+    if (input === null) return;
+    input = input.trim();
+    if (!input) return;
+    if (input === '초기화') {
+      userDict = {};
+      saveDict();
+      toast('등록한 단어를 모두 지웠습니다');
+      return;
+    }
+    var idx = input.indexOf(',');
+    if (idx < 1) { toast('쉼표로 구분해서 입력해주세요'); return; }
+    var from = input.slice(0, idx).trim();
+    var to = input.slice(idx + 1).trim();
+    if (!from || !to) { toast('두 단어를 모두 입력해주세요'); return; }
+    userDict[from] = to;
+    saveDict();
+    toast(from + ' → ' + to + ' 등록');
+  });
+
+  document.getElementById('btnClear').addEventListener('click', function () {
+    if (!textEl.innerText.trim()) return;
+    if (confirm('받아쓴 내용을 모두 지울까요?')) {
+      textEl.innerText = '';
+      interimEl.textContent = '';
+      try { localStorage.removeItem(KEY_TEXT); } catch (err) {}
+      refreshMeta();
+    }
+  });
 
   function keep() {
-    try { localStorage.setItem(KEY, textEl.innerText); } catch (err) {}
+    try { localStorage.setItem(KEY_TEXT, textEl.innerText); } catch (err) {}
   }
 
   function restore() {
     try {
-      var saved = localStorage.getItem(KEY);
+      var savedLang = localStorage.getItem(KEY_LANG);
+      if (savedLang === 'en-US') {
+        lang = 'en-US';
+        langKoBtn.setAttribute('aria-pressed', 'false');
+        langEnBtn.setAttribute('aria-pressed', 'true');
+      }
+      var saved = localStorage.getItem(KEY_TEXT);
       if (saved && saved.trim()) {
         textEl.innerText = saved;
         statusText.textContent = '지난 내용을 불러왔습니다';
@@ -449,22 +576,10 @@
 
   setInterval(keep, 3000);
   window.addEventListener('pagehide', keep);
-  document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'hidden') keep();
-  });
-  restore();
-
-  document.getElementById('btnClear').addEventListener('click', function () {
-    if (!textEl.innerText.trim()) return;
-    if (confirm('받아쓴 내용을 모두 지울까요?')) {
-      textEl.innerText = '';
-      interimEl.textContent = '';
-      try { localStorage.removeItem(KEY); } catch (err) {}
-      refreshMeta();
-    }
-  });
-
   textEl.addEventListener('input', refreshMeta);
+
+  loadDict();
+  restore();
   refreshMeta();
 })();
 </script>
